@@ -3,104 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Message ❤️</title>
+    <title>Be My Valentine?</title>
     <style>
+        :root {
+            --primary-pink: #ff4d6d;
+            --soft-pink: #ffeef2;
+        }
+
         body {
             margin: 0;
+            padding: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
-            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--soft-pink);
+            font-family: 'Arial', sans-serif;
             overflow: hidden;
+            position: relative;
         }
 
-        .card {
-            background: white;
-            padding: 2rem;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        /* The Card Container */
+        .container {
             text-align: center;
-            max-width: 90%;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
             z-index: 10;
         }
 
-        h1 { color: #d63384; font-size: 1.8rem; }
-        
-        .buttons {
-            margin-top: 20px;
+        /* Pulsing Heart Animation */
+        .main-heart {
+            font-size: 80px;
+            color: var(--primary-pink);
+            display: inline-block;
+            animation: pulse 1.2s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.3); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+            60% { transform: scale(1); }
+        }
+
+        h1 {
+            color: #c9184a;
+            font-size: 2.5rem;
+        }
+
+        .btn-group {
+            margin-top: 30px;
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
         }
 
         button {
-            padding: 12px 25px;
-            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
             border-radius: 50px;
-            font-weight: bold;
+            border: none;
             cursor: pointer;
-            transition: 0.3s;
+            font-weight: bold;
+            transition: all 0.3s ease;
         }
 
-        #yesBtn { background: #ff4d6d; color: white; }
-        #noBtn { background: #ced4da; color: #495057; position: relative; }
+        #yesBtn {
+            background-color: var(--primary-pink);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+        }
 
+        #noBtn {
+            background-color: #dee2e6;
+            color: #495057;
+        }
+
+        /* Floating Background Hearts */
         .floating-heart {
             position: absolute;
-            animation: float Up 4s linear forwards;
-            opacity: 0.8;
+            bottom: -50px;
+            color: var(--primary-pink);
+            opacity: 0.6;
+            pointer-events: none;
+            animation: floatUp var(--duration) linear infinite;
         }
 
         @keyframes floatUp {
-            from { transform: translateY(100vh) scale(0.5); opacity: 1; }
-            to { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+            to {
+                transform: translateY(-110vh) translateX(var(--drift));
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1 id="title">Will you be my Valentine? 🌹</h1>
-        <div class="buttons">
-            <button id="yesBtn">Yes!</button>
-            <button id="noBtn">No</button>
+    <div class="container">
+        <div class="main-heart">❤️</div>
+        <h1 id="text">Will you be my Valentine?</h1>
+        <div class="btn-group">
+            <button id="yesBtn">No!</button>
+            <button id="noBtn">Yes</button>
         </div>
     </div>
 
     <script>
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
-        const title = document.getElementById('title');
+        const text = document.getElementById('text');
 
-        // Make "No" button move away
-        noBtn.addEventListener('touchstart', moveButton); // For mobile
-        noBtn.addEventListener('mouseover', moveButton); // For desktop
-
-        function moveButton() {
+        // Logic to make the "No" button dodge the cursor
+        noBtn.addEventListener('mouseover', () => {
             const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
             const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
-        }
-
-        yesBtn.addEventListener('click', () => {
-            title.innerHTML = "I knew it! Love you! 🥰✨";
-            document.querySelector('.buttons').style.display = 'none';
-            setInterval(spawnHeart, 150);
+            
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
         });
 
-        function spawnHeart() {
+        // What happens when "Yes" is clicked
+        yesBtn.addEventListener('click', () => {
+            text.innerHTML = "ahhahhaha";
+            document.querySelector('.btn-group').style.display = 'none';
+            document.querySelector('.main-heart').style.animation = 'pulse 0.4s infinite'; // Fast pulse!
+            
+            // Intensify the floating hearts
+            for(let i=0; i<50; i++) {
+                setTimeout(createFloatingHeart, i * 100);
+            }
+        });
+
+        // Function to create background hearts
+        function createFloatingHeart() {
             const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
             heart.innerHTML = '❤️';
-            heart.className = 'floating-heart';
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = Math.random() * 20 + 20 + 'px';
+            heart.style.setProperty('--duration', (Math.random() * 3 + 3) + 's');
+            heart.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            
             document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 4000);
+
+            // Clean up old hearts to prevent memory issues
+            setTimeout(() => { heart.remove(); }, 6000);
         }
+
+        // Start with a few gentle hearts
+        setInterval(createFloatingHeart, 500);
     </script>
 </body>
 </html>
